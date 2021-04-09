@@ -6,83 +6,86 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.appcompany.entity.Company;
+import uz.pdp.appcompany.entity.Department;
 import uz.pdp.appcompany.payload.ApiResponse;
-import uz.pdp.appcompany.payload.CompanyDto;
-import uz.pdp.appcompany.service.CompanyService;
+import uz.pdp.appcompany.payload.DepartmentDto;
+import uz.pdp.appcompany.service.DepartmentService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/company")
-public class CompanyController {
+@RequestMapping("/department")
+public class DepartmentController {
     @Autowired
-    CompanyService companyService;
+    DepartmentService departmentService;
+
 
     /**
-     * GET ALL COMPANY
-     * @return COMPANYLIST
+     * RETURN ALL DEPARTMENT
+     * @return DEPARTMENT LIST
      */
     @GetMapping
     public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(companyService.getAll());
+        List<Department> departmentList = departmentService.getAll();
+        return ResponseEntity.ok(departmentList);
     }
 
 
+
     /**
-     * GET COMPANY WITH ID
+     * GET ONE DEPARTMENT WITH ID
      * @param id
-     * @return Company
-     * on the way comes id
+     * @return apiResponse
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable Integer id){
-        Company company = companyService.getOne(id);
-        return ResponseEntity.status(company!=null?200:404).body(company);
+        ApiResponse apiResponse = departmentService.getOne(id);
+        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse.isSuccess()?apiResponse.getObject():apiResponse);
     }
 
-
     /**
-     * ADD NEW COMPANY
-     * @param companyDto
-     * @return ApiResponse
-     * on the way comes CompanyDto
+     * ADD DEPARTMENT WITH COMPANY_ID AND DEPARTMENT_DTO
+     * @param departmentDto
+     * @return apiResponse
      */
     @PostMapping
-    public ResponseEntity<?> add(@Valid @RequestBody CompanyDto companyDto){
-        ApiResponse apiResponse = companyService.add(companyDto);
+    public ResponseEntity<?> add(@Valid @RequestBody DepartmentDto departmentDto){
+        ApiResponse apiResponse = departmentService.add(departmentDto);
         return ResponseEntity.status(apiResponse.isSuccess()?201:409).body(apiResponse);
     }
 
 
 
     /**
-     * DELETE COMPANY WITH ID
+     * DELETE DEPARTMENT WITH ID
      * @param id
      * @return ApiResponse
-     * on the way comes id
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id){
-        ApiResponse apiResponse = companyService.delete(id);
-        return ResponseEntity.status(apiResponse.isSuccess()?200:409).body(apiResponse);
+        ApiResponse apiResponse = departmentService.delete(id);
+        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
     }
+
+
 
 
 
     /**
-     * EDIT COMPANY WITH ID AND COMPANYDTO
+     * EDIT DEPARTMENT WITH ID AND DEPARTMENT_DTO
      * @param id
-     * @param companyDto
+     * @param departmentDto
      * @return ApiResponse
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@PathVariable Integer id,@Valid  @RequestBody CompanyDto companyDto){
-        ApiResponse apiResponse = companyService.edit(id, companyDto);
+    public ResponseEntity<?> edit(@PathVariable Integer id,@Valid @RequestBody DepartmentDto departmentDto){
+        ApiResponse apiResponse = departmentService.edit(id, departmentDto);
         return ResponseEntity.status(apiResponse.isSuccess()?200:409).body(apiResponse);
     }
+
 
 
 

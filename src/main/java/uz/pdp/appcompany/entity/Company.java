@@ -23,7 +23,7 @@ private Integer id;
     private Address address;
 
 
-    private boolean active;
+    private boolean active=true;
 
     public Company(String corpName, String directorName, Address address) {
         this.corpName = corpName;

@@ -6,83 +6,81 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.appcompany.entity.Company;
 import uz.pdp.appcompany.payload.ApiResponse;
-import uz.pdp.appcompany.payload.CompanyDto;
-import uz.pdp.appcompany.service.CompanyService;
+import uz.pdp.appcompany.payload.WorkerDto;
+import uz.pdp.appcompany.service.WorkerService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/company")
-public class CompanyController {
+@RequestMapping("/worker")
+public class WorkerController {
     @Autowired
-    CompanyService companyService;
+    WorkerService workerService;
+
 
     /**
-     * GET ALL COMPANY
-     * @return COMPANYLIST
+     * GET ALL WORKERS
+     * @return WORKER LIST
      */
     @GetMapping
     public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(companyService.getAll());
+        return ResponseEntity.ok(workerService.getAll());
     }
 
 
     /**
-     * GET COMPANY WITH ID
+     * GET ONE WORKER
      * @param id
-     * @return Company
-     * on the way comes id
+     * @return ApiResponse
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> getOne(@PathVariable Integer id){
-        Company company = companyService.getOne(id);
-        return ResponseEntity.status(company!=null?200:404).body(company);
+        ApiResponse apiResponse = workerService.getOne(id);
+        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
     }
 
 
     /**
-     * ADD NEW COMPANY
-     * @param companyDto
+     * ADD WORKER WITH WORKER_DTO
+     * @param workerDto
      * @return ApiResponse
-     * on the way comes CompanyDto
      */
     @PostMapping
-    public ResponseEntity<?> add(@Valid @RequestBody CompanyDto companyDto){
-        ApiResponse apiResponse = companyService.add(companyDto);
+    public ResponseEntity<?> add(@Valid @RequestBody WorkerDto workerDto){
+        ApiResponse apiResponse = workerService.add(workerDto);
         return ResponseEntity.status(apiResponse.isSuccess()?201:409).body(apiResponse);
     }
 
 
 
     /**
-     * DELETE COMPANY WITH ID
+     * DELETE WITH ID
      * @param id
      * @return ApiResponse
-     * on the way comes id
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id){
-        ApiResponse apiResponse = companyService.delete(id);
-        return ResponseEntity.status(apiResponse.isSuccess()?200:409).body(apiResponse);
+        ApiResponse apiResponse = workerService.delete(id);
+        return ResponseEntity.status(apiResponse.isSuccess()?200:404).body(apiResponse);
     }
 
 
 
     /**
-     * EDIT COMPANY WITH ID AND COMPANYDTO
+     * EDIT WORKER WITH ID AND WORKER_DTO
      * @param id
-     * @param companyDto
+     * @param workerDto
      * @return ApiResponse
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@PathVariable Integer id,@Valid  @RequestBody CompanyDto companyDto){
-        ApiResponse apiResponse = companyService.edit(id, companyDto);
+    public ResponseEntity<?> edit(@PathVariable Integer id,@Valid @RequestBody WorkerDto workerDto){
+        ApiResponse apiResponse = workerService.edit(id, workerDto);
         return ResponseEntity.status(apiResponse.isSuccess()?200:409).body(apiResponse);
     }
+
 
 
 

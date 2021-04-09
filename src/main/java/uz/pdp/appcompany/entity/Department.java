@@ -10,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"name","company_id"}))
 public class Department {
 
     @Id
@@ -21,4 +22,11 @@ public class Department {
 
     @ManyToOne(optional = false)
     private Company company;
+
+    private boolean active=true;
+
+    public Department(String name, Company company) {
+        this.name = name;
+        this.company = company;
+    }
 }

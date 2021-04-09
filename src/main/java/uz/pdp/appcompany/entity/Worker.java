@@ -16,7 +16,7 @@ public class Worker {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String fullName;
 
     @Column(unique = true,nullable = false)
     private String phoneNumber;
@@ -27,4 +27,5 @@ public class Worker {
     @ManyToOne(optional = false)
     private Department department;
 
+    private boolean active;
 }

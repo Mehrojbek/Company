@@ -5,4 +5,6 @@ import uz.pdp.appcompany.entity.Company;
 
 public interface CompanyRepository extends JpaRepository<Company,Integer> {
     boolean existsByCorpName(String corpName);
+    long countAllByCorpNameStartingWithAndCorpNameEndingWith(String deleted, String corpName);
+    boolean existsByCorpNameAndIdNot(String corpName, Integer id);
 }

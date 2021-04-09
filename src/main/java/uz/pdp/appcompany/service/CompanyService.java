@@ -6,6 +6,7 @@ import uz.pdp.appcompany.entity.Address;
 import uz.pdp.appcompany.entity.Company;
 import uz.pdp.appcompany.payload.ApiResponse;
 import uz.pdp.appcompany.payload.CompanyDto;
+import uz.pdp.appcompany.payload.Deleted;
 import uz.pdp.appcompany.repository.AddressRepository;
 import uz.pdp.appcompany.repository.CompanyRepository;
 
@@ -75,7 +76,38 @@ public class CompanyService {
         if (!optionalCompany.isPresent())
             return new ApiResponse("Company noy found",false);
         Company company = optionalCompany.get();
+        long numberOfDeletedCompany = companyRepository.countAllByCorpNameStartingWithAndCorpNameEndingWith(Deleted.DELETED, company.getCorpName())+1;
+        company.setCorpName(Deleted.DELETED+numberOfDeletedCompany+":"+company.getCorpName());
         company.setActive(false);
+        companyRepository.save(company);
+        return new ApiResponse("Company deleted",true);
+    }
+
+
+    /**
+     * EDIT COMPANY WITH ID AND COMPANYDTO
+     * @param id
+     * @param companyDto
+     * @return ApiResponse
+     */
+    public ApiResponse edit(Integer id, CompanyDto companyDto){
+        boolean nameAndIdNot = companyRepository.existsByCorpNameAndIdNot(companyDto.getCorpName(), id);
+        if (nameAndIdNot)
+            return new ApiResponse("This company already exist",false);
+        Optional<Company> optionalCompany = companyRepository.findById(id);
+        if (!optionalCompany.isPresent())
+            return new ApiResponse("Company not found",false);
+        Company company = optionalCompany.get();
+        company.setDirectorName(companyDto.getDirectorName());
+        company.setCorpName(companyDto.getCorpName());
+
+        Address address = company.getAddress();
+        address.setHomeNumber(companyDto.getHomeNumber());
+        address.setStreet(companyDto.getStreet());
+
+        companyRepository.save(company);
+
+        return new ApiResponse("Company edited",true);
     }
 
 }
